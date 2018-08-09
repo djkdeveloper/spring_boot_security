@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.djk.user.UserMapper">
+
+    <resultMap id="customer" type="com.djk.user.User">
+        <result column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+    </resultMap>
+
+    <resultMap id="permission" type="com.djk.user.Permission">
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="authority" property="authority"/>
+    </resultMap>
+
+    <insert id="addUser" parameterType="com.djk.user.User" useGeneratedKeys="true" keyProperty="id">
+      INSERT  into `user` (username,password) values (#{username},#{password})
+    </insert>
+
+    <insert id="addUserAndRole" parameterType="java.util.Map">
+        INSERT into user_role (user_id,role_id) values(#{userId},#{roleId})
+    </insert>
+
+    <select id="queryByName" parameterType="java.lang.String" resultMap="customer">
+        select * from `user` where username = #{username}
+    </select>
+
+    <select id="queryAllUsers" resultMap="customer">
+        select * from `user`
+    </select>
+
+    <update id="updateName" parameterType="com.djk.user.User">
+        update `user` set username = #{username} where id = #{id}
+    </update>
+
+    <select id="queryPermissions" parameterType="java.lang.Long" resultMap="permission">
+    select p.* from user u join user_role ur on u.id = ur.user_id join role_permission rp on ur.role_id = rp.role_id join permission p on p.id = rp.permission_id where u.id = #{id}
+    </select>
+</mapper>
