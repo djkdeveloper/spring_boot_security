@@ -14,6 +14,29 @@ spring_boot_security jwt
 - 配置application.yml 中的 数据库地址 和用户名密码
 - 启动SpringBootSecurityApplication main方法
 
+## docker-compose 部署
+```bash
+version: '3'
+services:
+  mysql:
+    image : mysql:5.7.20
+    ports:
+      - "3306:3306"
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+
+  security:
+    image: djkdeveloper/spring_boot_security
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_HOST=mysql
+      - DB_SCHEMA=security
+    links:
+      - mysql
+```
+
 
 ## 关于sql文件的说明
 - 该项目的权限是 用户名-》角色-》权限
